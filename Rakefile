@@ -19,9 +19,10 @@ PKG_VERSION = File.read('VERSION').chomp
 PKG_FILES   = FileList["**/*"].exclude(/^(pkg|coverage|doc|tmp)/)
 PKG_DOC_FILES = [ "ext/amatch.c" ].concat(Dir['lib/**/*.rb']) << 'README'
 
-desc "Run unit tests"
-task :test => :compile_ext do
-  sh %{testrb -Iext:lib tests/test_*.rb}
+require 'rake/testtask'
+Rake::TestTask.new do |t|
+  t.libs << [ "ext", "lib", "tests" ]
+  t.test_files = FileList["tests/test_*.rb"]
 end
 
 desc "Compiling library"
